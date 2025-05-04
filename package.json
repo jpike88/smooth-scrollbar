@@ -1,6 +1,6 @@
 {
   "name": "smooth-scrollbar-deluxe",
-  "version": "10.1.0",
+  "version": "11.0.0",
   "description": "Customize scrollbar in modern browsers with smooth scrolling experience.",
   "main": "dist/smooth-scrollbar.js",
   "jsnext:main": "index.js",
