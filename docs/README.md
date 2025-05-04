@@ -1,10 +1,10 @@
 # Smooth Scrollbar
 
-> This is the API documentation for `smooth-scrollbar@8.x`, check [here](https://github.com/idiotWu/smooth-scrollbar/tree/7.x) for the docs of version 7.x.
+> This is the API documentation for `smooth-scrollbar-deluxe@8.x`, check [here](https://github.com/idiotWu/smooth-scrollbar-deluxe/tree/7.x) for the docs of version 7.x.
 
 > Looking for migration guides? See [migration guide](migration.md) for details.
 
-## What is smooth-scrollbar?
+## What is smooth-scrollbar-deluxe?
 
 Smooth Scrollbar is a JavaScript Plugin that allows you customizing high perfermance scrollbars cross browsers. It is using `translate3d` to perform a momentum based scrolling (aka inertial scrolling) on modern browsers. With the flexible [plugin system](plugin.md), we can easily redesign the scrollbar as we want. This is the scrollbar plugin that you've ever dreamed of!
 
@@ -13,13 +13,13 @@ Smooth Scrollbar is a JavaScript Plugin that allows you customizing high perferm
 Via NPM **(recommended)**:
 
 ```shell
-npm install smooth-scrollbar --save
+npm install smooth-scrollbar-deluxe --save
 ```
 
 Via Bower:
 
 ```shell
-bower install smooth-scrollbar --save
+bower install smooth-scrollbar-deluxe --save
 ```
 
 ## Browser Compatibility
@@ -36,14 +36,14 @@ bower install smooth-scrollbar --save
 
 ## Demo
 
-https://idiotwu.github.io/smooth-scrollbar/
+https://idiotwu.github.io/smooth-scrollbar-deluxe/
 
 ## Usage
 
 Since this package has a [pkg.module](https://github.com/rollup/rollup/wiki/pkg.module) field, it's highly recommended to import it as an ES6 module with some bundlers like [webpack](https://webpack.js.org/) or [rollup](https://rollupjs.org/):
 
 ```js
-import Scrollbar from 'smooth-scrollbar';
+import Scrollbar from 'smooth-scrollbar-deluxe';
 
 Scrollbar.init(document.querySelector('#my-scrollbar'), options);
 ```
@@ -51,7 +51,7 @@ Scrollbar.init(document.querySelector('#my-scrollbar'), options);
 If you are not using any bundlers, you can just load the UMD bundle:
 
 ```html
-<script src="dist/smooth-scrollbar.js"></script>
+<script src="dist/smooth-scrollbar-deluxe.js"></script>
 
 <script>
   var Scrollbar = window.Scrollbar;
@@ -103,7 +103,7 @@ If the container element is natively scrollable before initializing the Scrollba
 | delegateTo | `EventTarget` | `null` | Delegate _wheel events_ and _touch events_ to the given element. By default, the container element is used. This option will be useful for dealing with fixed elements.  |
 | plugins | `object` | `{}` | Options for plugins, see [Plugin System](plugin.md). |
 
-**Confusing with the option field? Try real-time edit tool on [demo page](http://idiotwu.github.io/smooth-scrollbar/)!**
+**Confusing with the option field? Try real-time edit tool on [demo page](http://idiotwu.github.io/smooth-scrollbar-deluxe/)!**
 
 ## DOM Structure
 
@@ -130,4 +130,4 @@ Check the [API documentation](api.md).
 
 ## Related Projects
 
-- [react-smooth-scrollbar](https://github.com/idiotWu/react-smooth-scrollbar)
+- [react-smooth-scrollbar-deluxe](https://github.com/idiotWu/react-smooth-scrollbar-deluxe)

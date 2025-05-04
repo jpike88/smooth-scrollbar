@@ -1,36 +1,39 @@
-import * as dat from 'dat-gui';
-import Scrollbar from 'smooth-scrollbar';
-import OverscrollPlugin from 'smooth-scrollbar/plugins/overscroll';
+import * as dat from "dat-gui";
+import Scrollbar from "smooth-scrollbar-deluxe";
+import OverscrollPlugin from "smooth-scrollbar-deluxe/plugins/overscroll";
 
 Scrollbar.use(OverscrollPlugin);
 
-const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+const isMobile =
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent,
+  );
 
 const options = {
   damping: isMobile ? 0.05 : 0.1,
   thumbMinSize: 20,
-  renderByPixels: !('ontouchstart' in document),
+  renderByPixels: !("ontouchstart" in document),
   alwaysShowTracks: false,
   continuousScrolling: true,
 };
 
 const overscrollOptions = {
   enable: true,
-  effect: navigator.userAgent.match(/Android/) ? 'glow' : 'bounce',
+  effect: navigator.userAgent.match(/Android/) ? "glow" : "bounce",
   damping: 0.2,
   maxOverscroll: 150,
-  glowColor: '#222a2d',
+  glowColor: "#222a2d",
 };
 
 const scrollbars = [
-  Scrollbar.init(document.getElementById('main-scrollbar') as HTMLElement, {
+  Scrollbar.init(document.getElementById("main-scrollbar") as HTMLElement, {
     ...options,
     delegateTo: document,
     plugins: {
       overscroll: { ...overscrollOptions },
     },
   }),
-  Scrollbar.init(document.getElementById('inner-scrollbar') as HTMLElement, {
+  Scrollbar.init(document.getElementById("inner-scrollbar") as HTMLElement, {
     ...options,
     plugins: {
       overscroll: { ...overscrollOptions },
@@ -43,7 +46,7 @@ function updateScrollbar() {
   scrollbars.forEach((s) => {
     // real-time options
     Object.assign(s.options, options);
-    s.updatePluginOptions('overscroll', {
+    s.updatePluginOptions("overscroll", {
       ...overscrollOptions,
       effect: overscrollOptions.enable ? overscrollOptions.effect : undefined,
     });
@@ -58,31 +61,31 @@ function updateScrollbar() {
   });
 }
 
-const f1 = controller.addFolder('Scrollbar Options');
+const f1 = controller.addFolder("Scrollbar Options");
 f1.open();
 
 [
-  f1.add(options, 'damping', 0.01, 1),
-  f1.add(options, 'thumbMinSize', 0, 100),
-  f1.add(options, 'renderByPixels'),
-  f1.add(options, 'alwaysShowTracks'),
-  f1.add(options, 'continuousScrolling'),
+  f1.add(options, "damping", 0.01, 1),
+  f1.add(options, "thumbMinSize", 0, 100),
+  f1.add(options, "renderByPixels"),
+  f1.add(options, "alwaysShowTracks"),
+  f1.add(options, "continuousScrolling"),
 ].forEach((ctrl) => {
   ctrl.onChange(updateScrollbar);
 });
 
-const f2 = controller.addFolder('Overscroll Plugin Options');
+const f2 = controller.addFolder("Overscroll Plugin Options");
 [
-  f2.add(overscrollOptions, 'enable'),
-  f2.add(overscrollOptions, 'effect', ['bounce', 'glow']),
-  f2.add(overscrollOptions, 'damping', 0.01, 1),
-  f2.add(overscrollOptions, 'maxOverscroll', 30, 300),
-  f2.addColor(overscrollOptions, 'glowColor'),
+  f2.add(overscrollOptions, "enable"),
+  f2.add(overscrollOptions, "effect", ["bounce", "glow"]),
+  f2.add(overscrollOptions, "damping", 0.01, 1),
+  f2.add(overscrollOptions, "maxOverscroll", 30, 300),
+  f2.addColor(overscrollOptions, "glowColor"),
 ].forEach((ctrl) => {
   ctrl.onChange(updateScrollbar);
 });
 
-const el = document.getElementById('controller');
+const el = document.getElementById("controller");
 
 if (el) {
   el.appendChild(controller.domElement);

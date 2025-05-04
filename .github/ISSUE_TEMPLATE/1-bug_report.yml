@@ -19,7 +19,7 @@ body:
       required: true
     attributes:
       label: Version
-      description: The version of smooth-scrollbar.
+      description: The version of smooth-scrollbar-deluxe.
   - type: textarea
     validations:
       required: true

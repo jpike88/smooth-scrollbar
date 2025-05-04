@@ -1,14 +1,14 @@
-import Scrollbar from 'smooth-scrollbar';
-import { controller } from './controller';
+import Scrollbar from "smooth-scrollbar-deluxe";
+import { controller } from "./controller";
 
 const DPR = window.devicePixelRatio;
 const TIME_RANGE_MAX = 20 * 1e3;
 
-const monitor = document.getElementById('monitor') as HTMLCanvasElement;
-const thumb = document.getElementById('thumb') as HTMLCanvasElement;
-const track = document.getElementById('track') as HTMLCanvasElement;
-const canvas = document.getElementById('chart') as HTMLCanvasElement;
-const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+const monitor = document.getElementById("monitor") as HTMLCanvasElement;
+const thumb = document.getElementById("thumb") as HTMLCanvasElement;
+const track = document.getElementById("track") as HTMLCanvasElement;
+const canvas = document.getElementById("chart") as HTMLCanvasElement;
+const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 const size = {
   width: 300,
   height: 200,
@@ -18,21 +18,23 @@ canvas.width = size.width * DPR;
 canvas.height = size.height * DPR;
 ctx.scale(DPR, DPR);
 
-const scrollbar = Scrollbar.get(document.getElementById('main-scrollbar') as HTMLElement) as Scrollbar;
-const monitorCtrl = controller.addFolder('Monitor');
+const scrollbar = Scrollbar.get(
+  document.getElementById("main-scrollbar") as HTMLElement,
+) as Scrollbar;
+const monitorCtrl = controller.addFolder("Monitor");
 
 type Coord2d = [number, number];
 
 type RecordPoint = {
-  offset: number,
-  time: number,
-  reduce: number,
-  speed: number,
+  offset: number;
+  time: number;
+  reduce: number;
+  speed: number;
 };
 
 type TangentPoint = {
-  coord: Coord2d,
-  point: RecordPoint,
+  coord: Coord2d;
+  point: RecordPoint;
 };
 
 const records: RecordPoint[] = [];
@@ -46,7 +48,7 @@ let tangentPoint: TangentPoint | null = null;
 let tangentPointPre: TangentPoint | null = null;
 
 let hoverLocked = false;
-let hoverPrecision = 'ontouchstart' in document ? 5 : 1;
+let hoverPrecision = "ontouchstart" in document ? 5 : 1;
 
 let hoverPointerX: number | undefined;
 let pointerDownOnTrack: number | undefined;
@@ -58,7 +60,7 @@ let reduceAmount = 0;
 
 const monitorOptions = {
   show: window.innerWidth > 600,
-  data: 'offset',
+  data: "offset",
   duration: 5,
   reset() {
     records.length = endOffset = reduceAmount = 0;
@@ -71,55 +73,62 @@ const monitorOptions = {
 };
 
 if (monitorOptions.show) {
-  monitor.style.display = 'block';
+  monitor.style.display = "block";
   renderLoopID = requestAnimationFrame(render);
 }
 
-monitorCtrl.add(monitorOptions, 'reset');
-monitorCtrl.add(monitorOptions, 'data', ['offset', 'speed'])
-  .onChange(() => {
-    shouldUpdate = true;
-  });
+monitorCtrl.add(monitorOptions, "reset");
+monitorCtrl.add(monitorOptions, "data", ["offset", "speed"]).onChange(() => {
+  shouldUpdate = true;
+});
 
-monitorCtrl.add(monitorOptions, 'show')
-  .onChange((show) => {
-    if (show) {
-      monitor.style.display = 'block';
-      renderLoopID = requestAnimationFrame(render);
-    } else {
-      monitor.style.display = 'none';
-      cancelAnimationFrame(renderLoopID);
-    }
-  });
+monitorCtrl.add(monitorOptions, "show").onChange((show) => {
+  if (show) {
+    monitor.style.display = "block";
+    renderLoopID = requestAnimationFrame(render);
+  } else {
+    monitor.style.display = "none";
+    cancelAnimationFrame(renderLoopID);
+  }
+});
 
-monitorCtrl.add(monitorOptions, 'duration', 1, 20)
-  .onChange(() => {
-    shouldUpdate = true;
-    let start = records[0];
-    let end = records[records.length - 1];
+monitorCtrl.add(monitorOptions, "duration", 1, 20).onChange(() => {
+  shouldUpdate = true;
+  let start = records[0];
+  let end = records[records.length - 1];
 
-    if (end) {
-      endOffset = Math.min(endOffset, Math.max(0, 1 - monitorOptions.duration * 1e3 / (end.time - start.time)));
-    }
-  });
+  if (end) {
+    endOffset = Math.min(
+      endOffset,
+      Math.max(
+        0,
+        1 - (monitorOptions.duration * 1e3) / (end.time - start.time),
+      ),
+    );
+  }
+});
 
 function notation(num: number = 0) {
   if (!num || Math.abs(num) > 10 ** -2) return num.toFixed(2);
 
   let exp = -3;
 
-  while (!(num / 10 ** exp | 0)) {
+  while (!((num / 10 ** exp) | 0)) {
     if (exp < -10) {
-      return num > 0 ? 'Infinity' : '-Infinity';
+      return num > 0 ? "Infinity" : "-Infinity";
     }
 
     exp--;
   }
 
-  return (num * 10 ** -exp).toFixed(2) + 'e' + exp;
+  return (num * 10 ** -exp).toFixed(2) + "e" + exp;
 }
 
-function addEvent(elems: EventTarget | EventTarget[], evts: string, handler: (e: Event) => void) {
+function addEvent(
+  elems: EventTarget | EventTarget[],
+  evts: string,
+  handler: (e: Event) => void,
+) {
   evts.split(/\s+/).forEach((name) => {
     ([] as EventTarget[]).concat(elems).forEach((el) => {
       el.addEventListener(name, (e) => {
@@ -151,20 +160,23 @@ function sliceRecord(): RecordPoint[] {
   records.splice(0, dropIdx);
   thumbWidth = result.length ? result.length / records.length : 1;
 
-  thumb.style.width = thumbWidth * 100 + '%';
-  thumb.style.right = endOffset * 100 + '%';
+  thumb.style.width = thumbWidth * 100 + "%";
+  thumb.style.right = endOffset * 100 + "%";
 
   return result;
 }
 
-function getLimit(points: RecordPoint[]): { max: number, min: number } {
-  return points.reduce((pre, cur) => {
-    let val = cur[monitorOptions.data];
-    return {
-      max: Math.max(pre.max, val),
-      min: Math.min(pre.min, val),
-    };
-  }, { max: -Infinity, min: Infinity });
+function getLimit(points: RecordPoint[]): { max: number; min: number } {
+  return points.reduce(
+    (pre, cur) => {
+      let val = cur[monitorOptions.data];
+      return {
+        max: Math.max(pre.max, val),
+        min: Math.min(pre.min, val),
+      };
+    },
+    { max: -Infinity, min: Infinity },
+  );
 }
 
 function assignProps(props: any) {
@@ -201,9 +213,9 @@ function adjustText(content: string, p: Coord2d, options: any) {
   let width = ctx.measureText(content).width;
 
   if (x + width > size.width) {
-    ctx.textAlign = 'right';
+    ctx.textAlign = "right";
   } else if (x - width < 0) {
-    ctx.textAlign = 'left';
+    ctx.textAlign = "left";
   } else {
     ctx.textAlign = options.textAlign;
   }
@@ -229,44 +241,48 @@ function drawMain() {
   let start = points[0];
   let end = points[points.length - 1];
 
-  let totalX = thumbWidth === 1 ? monitorOptions.duration * 1e3 : end.time - start.time;
-  let totalY = (limit.max - limit.min) || 1;
+  let totalX =
+    thumbWidth === 1 ? monitorOptions.duration * 1e3 : end.time - start.time;
+  let totalY = limit.max - limit.min || 1;
 
   const grd = ctx.createLinearGradient(0, size.height, 0, 0);
-  grd.addColorStop(0, 'rgb(170, 215, 255)');
-  grd.addColorStop(1, 'rgba(170, 215, 255, 0.2)');
+  grd.addColorStop(0, "rgb(170, 215, 255)");
+  grd.addColorStop(1, "rgba(170, 215, 255, 0.2)");
 
   ctx.save();
   ctx.transform(1, 0, 0, -1, 0, size.height);
 
   ctx.lineWidth = 1;
   ctx.fillStyle = grd;
-  ctx.strokeStyle = 'rgb(64, 165, 255)';
+  ctx.strokeStyle = "rgb(64, 165, 255)";
   ctx.beginPath();
   ctx.moveTo(0, 0);
 
-  const lastPoint = points.reduce((pre: Coord2d, cur: RecordPoint, idx: number) => {
-    const time = cur.time;
-    const value = cur[monitorOptions.data];
-    const x = (time - start.time) / totalX * size.width;
-    const y = (value - limit.min) / totalY * (size.height - 20);
+  const lastPoint = points.reduce(
+    (pre: Coord2d, cur: RecordPoint, idx: number) => {
+      const time = cur.time;
+      const value = cur[monitorOptions.data];
+      const x = ((time - start.time) / totalX) * size.width;
+      const y = ((value - limit.min) / totalY) * (size.height - 20);
 
-    ctx.lineTo(x, y);
+      ctx.lineTo(x, y);
 
-    if (hoverPointerX && Math.abs(hoverPointerX - x) < hoverPrecision) {
-      tangentPoint = {
-        coord: [x, y],
-        point: cur,
-      };
+      if (hoverPointerX && Math.abs(hoverPointerX - x) < hoverPrecision) {
+        tangentPoint = {
+          coord: [x, y],
+          point: cur,
+        };
 
-      tangentPointPre = {
-        coord: pre,
-        point: points[idx - 1],
-      };
-    }
+        tangentPointPre = {
+          coord: pre,
+          point: points[idx - 1],
+        };
+      }
 
-    return [x, y];
-  }, []) as Coord2d;
+      return [x, y];
+    },
+    [],
+  ) as Coord2d;
 
   ctx.stroke();
   ctx.lineTo(lastPoint[0], 0);
@@ -276,24 +292,24 @@ function drawMain() {
 
   drawLine([0, lastPoint[1]], lastPoint, {
     props: {
-      strokeStyle: '#f60',
+      strokeStyle: "#f60",
     },
   });
 
-  fillText('↙' + notation(limit.min), [0, 0], {
+  fillText("↙" + notation(limit.min), [0, 0], {
     props: {
-      fillStyle: '#000',
-      textAlign: 'left',
-      textBaseline: 'bottom',
-      font: '12px sans-serif',
+      fillStyle: "#000",
+      textAlign: "left",
+      textBaseline: "bottom",
+      font: "12px sans-serif",
     },
   });
   fillText(notation(end[monitorOptions.data]), lastPoint, {
     props: {
-      fillStyle: '#f60',
-      textAlign: 'right',
-      textBaseline: 'bottom',
-      font: '16px sans-serif',
+      fillStyle: "#f60",
+      textAlign: "right",
+      textBaseline: "bottom",
+      font: "16px sans-serif",
     },
   });
 }
@@ -312,19 +328,21 @@ function drawTangentLine() {
   drawLine([0, b], [size.width, k * size.width + b], {
     props: {
       lineWidth: 1,
-      strokeStyle: '#f00',
+      strokeStyle: "#f00",
     },
   });
 
-  const realK = (tangentPoint.point[monitorOptions.data] - tangentPointPre.point[monitorOptions.data]) /
+  const realK =
+    (tangentPoint.point[monitorOptions.data] -
+      tangentPointPre.point[monitorOptions.data]) /
     (tangentPoint.point.time - tangentPointPre.point.time);
 
-  fillText('dy/dx: ' + notation(realK), [size.width / 2, 0], {
+  fillText("dy/dx: " + notation(realK), [size.width / 2, 0], {
     props: {
-      fillStyle: '#f00',
-      textAlign: 'center',
-      textBaseline: 'bottom',
-      font: 'bold 12px sans-serif',
+      fillStyle: "#f00",
+      textAlign: "center",
+      textBaseline: "bottom",
+      font: "bold 12px sans-serif",
     },
   });
 }
@@ -341,7 +359,7 @@ function drawHover() {
     dashed: [8, 4],
     props: {
       lineWidth: 1,
-      strokeStyle: 'rgb(64, 165, 255)',
+      strokeStyle: "rgb(64, 165, 255)",
     },
   };
 
@@ -351,23 +369,23 @@ function drawHover() {
   let date = new Date(point.time + point.reduce);
 
   let pointInfo = [
-    '(',
+    "(",
     date.getMinutes(),
-    ':',
+    ":",
     date.getSeconds(),
-    '.',
+    ".",
     date.getMilliseconds(),
-    ', ',
+    ", ",
     notation(point[monitorOptions.data]),
-    ')',
-  ].join('');
+    ")",
+  ].join("");
 
   fillText(pointInfo, coord, {
     props: {
-      fillStyle: '#000',
-      textAlign: 'left',
-      textBaseline: 'bottom',
-      font: 'bold 12px sans-serif',
+      fillStyle: "#000",
+      textAlign: "left",
+      textBaseline: "bottom",
+      font: "bold 12px sans-serif",
     },
   });
 }
@@ -383,10 +401,10 @@ function render() {
 
   fillText(monitorOptions.data.toUpperCase(), [0, size.height], {
     props: {
-      fillStyle: '#f00',
-      textAlign: 'left',
-      textBaseline: 'top',
-      font: 'bold 14px sans-serif',
+      fillStyle: "#f00",
+      textAlign: "left",
+      textBaseline: "top",
+      font: "bold 14px sans-serif",
     },
   });
 
@@ -394,12 +412,12 @@ function render() {
   drawHover();
 
   if (hoverLocked) {
-    fillText('LOCKED', [size.width, size.height], {
+    fillText("LOCKED", [size.width, size.height], {
       props: {
-        fillStyle: '#f00',
-        textAlign: 'right',
-        textBaseline: 'top',
-        font: 'bold 14px sans-serif',
+        fillStyle: "#f00",
+        textAlign: "right",
+        textBaseline: "top",
+        font: "bold 14px sans-serif",
       },
     });
   }
@@ -419,8 +437,8 @@ scrollbar.addListener(() => {
   if (!duration || offset === lastOffset) return;
 
   if (duration > 100) {
-    reduceAmount += (duration - 1);
-    duration -= (duration - 1);
+    reduceAmount += duration - 1;
+    duration -= duration - 1;
   }
 
   let velocity = (offset - lastOffset) / duration;
@@ -442,7 +460,7 @@ function getPointer(e: any) {
 }
 
 // hover
-addEvent(canvas, 'mousemove touchmove', (e) => {
+addEvent(canvas, "mousemove touchmove", (e) => {
   if (hoverLocked || pointerDownOnTrack) return;
 
   let pointer = getPointer(e);
@@ -456,24 +474,24 @@ function resetHover() {
   tangentPointPre = null;
 }
 
-addEvent([canvas, window], 'mouseleave touchend', () => {
+addEvent([canvas, window], "mouseleave touchend", () => {
   if (hoverLocked) return;
   resetHover();
 });
 
-addEvent(canvas, 'click', () => {
+addEvent(canvas, "click", () => {
   hoverLocked = !hoverLocked;
 
   if (!hoverLocked) resetHover();
 });
 
 // track
-addEvent(thumb, 'mousedown touchstart', (e) => {
+addEvent(thumb, "mousedown touchstart", (e) => {
   let pointer = getPointer(e);
   pointerDownOnTrack = pointer.clientX;
 });
 
-addEvent(window, 'mousemove touchmove', (e) => {
+addEvent(window, "mousemove touchmove", (e) => {
   if (!pointerDownOnTrack) return;
 
   let pointer = getPointer(e);
@@ -483,17 +501,20 @@ addEvent(window, 'mousemove touchmove', (e) => {
   endOffset = Math.min(1 - thumbWidth, Math.max(0, endOffset - moved));
 });
 
-addEvent(window, 'mouseup touchend blur', () => {
+addEvent(window, "mouseup touchend blur", () => {
   pointerDownOnTrack = undefined;
 });
 
-addEvent(thumb, 'click touchstart', (e) => {
+addEvent(thumb, "click touchstart", (e) => {
   e.stopPropagation();
 });
 
-addEvent(track, 'click touchstart', (e) => {
+addEvent(track, "click touchstart", (e) => {
   let pointer = getPointer(e);
   let rect = track.getBoundingClientRect();
   let offset = (pointer.clientX - rect.left) / rect.width;
-  endOffset = Math.min(1 - thumbWidth, Math.max(0, 1 - (offset + thumbWidth / 2)));
+  endOffset = Math.min(
+    1 - thumbWidth,
+    Math.max(0, 1 - (offset + thumbWidth / 2)),
+  );
 });

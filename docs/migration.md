@@ -13,7 +13,7 @@
 
 ## CSS-in-JS bundle
 
-`smooth-scrollbar.css` has been removed from 8.x, you just need to import the main js module/bundle 🙌.
+`smooth-scrollbar-deluxe.css` has been removed from 8.x, you just need to import the main js module/bundle 🙌.
 
 ## Plugin System
 
@@ -24,7 +24,7 @@ See [Plugin System](plugin.md) for details;
 Overscroll effect is no longer bundle with main package. You need to import it manually:
 
 ```js
-import OverscrollPlugin from 'smooth-scrollbar/plugins/overscroll';
+import OverscrollPlugin from 'smooth-scrollbar-deluxe/plugins/overscroll';
 
 Scrollbar.use(OverscrollPlugin);
 
@@ -38,7 +38,7 @@ Scrollbar.init(elem, {
 OR
 
 ```html
-<script src="dist/smooth-scrollbar.js"></script>
+<script src="dist/smooth-scrollbar-deluxe.js"></script>
 <script src="dist/plugins/overscroll.js"></script>
 
 <script>
@@ -136,7 +136,7 @@ Reason: use `scrollbar.setMomentum(0, 0)`.
 Reason: could be implemented via plugin system:
 
 ```js
-import Scrollbar, { ScrollbarPlugin } from 'smooth-scrollbar';
+import Scrollbar, { ScrollbarPlugin } from 'smooth-scrollbar-deluxe';
 
 class FilterEventPlugin extends ScrollbarPlugin {
   static pluginName = 'filterEvent';

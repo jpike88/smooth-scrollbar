@@ -1,11 +1,6 @@
-import {
-  range,
-  boolean,
-} from './decorators/';
+import { range, boolean } from "./decorators/";
 
-import {
-  ScrollbarOptions,
-} from './interfaces/';
+import { ScrollbarOptions } from "./interfaces/";
 
 export class Options {
   /**
@@ -54,7 +49,9 @@ export class Options {
   }
 
   set wheelEventTarget(el: EventTarget | null) {
-    console.warn('[smooth-scrollbar]: `options.wheelEventTarget` is deprecated and will be removed in the future, use `options.delegateTo` instead.');
+    console.warn(
+      "[smooth-scrollbar-deluxe]: `options.wheelEventTarget` is deprecated and will be removed in the future, use `options.delegateTo` instead.",
+    );
 
     this.delegateTo = el;
   }

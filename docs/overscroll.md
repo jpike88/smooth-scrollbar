@@ -5,7 +5,7 @@ Overscroll plugin provides the macOS style overscroll bouncing effect and Androi
 ## Usage
 
 ```js
-import OverscrollPlugin from 'smooth-scrollbar/plugins/overscroll';
+import OverscrollPlugin from 'smooth-scrollbar-deluxe/plugins/overscroll';
 
 Scrollbar.use(OverscrollPlugin);
 
@@ -19,7 +19,7 @@ Scrollbar.init(elem, {
 OR
 
 ```html
-<script src="dist/smooth-scrollbar.js"></script>
+<script src="dist/smooth-scrollbar-deluxe.js"></script>
 <script src="dist/plugins/overscroll.js"></script>
 
 <script>
@@ -102,4 +102,4 @@ Scrollbar.init(elem, {
 
 ## Online Demo
 
-[http://idiotwu.github.io/smooth-scrollbar/](http://idiotwu.github.io/smooth-scrollbar/)
+[http://idiotwu.github.io/smooth-scrollbar-deluxe/](http://idiotwu.github.io/smooth-scrollbar-deluxe/)

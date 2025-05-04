@@ -1,6 +1,6 @@
 # APIs
 
-> This is the API documentation for `smooth-scrollbar@8.x`, check [here](https://github.com/idiotWu/smooth-scrollbar/tree/7.x) for the docs of version 7.x.
+> This is the API documentation for `smooth-scrollbar-deluxe@8.x`, check [here](https://github.com/idiotWu/smooth-scrollbar-deluxe/tree/7.x) for the docs of version 7.x.
 
 > Looking for migration guides? See [migration guide](migration.md) for details.
 
@@ -176,8 +176,8 @@ Scrollbar.use(...Plugins: ScrollbarPluginClass[]): void
 Attaches plugins to scrollbars. See [Plugin System](plugin.md);
 
 ```js
-import Scrollbar, { ScrollbarPlugin } from 'smooth-scrollbar';
-import OverscrollPlugin from 'smooth-scrollbar/plugin/overscroll';
+import Scrollbar, { ScrollbarPlugin } from 'smooth-scrollbar-deluxe';
+import OverscrollPlugin from 'smooth-scrollbar-deluxe/plugin/overscroll';
 
 class MyPlugin extends ScrollbarPlugin {
   ...

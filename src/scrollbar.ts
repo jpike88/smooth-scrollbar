@@ -1,39 +1,22 @@
-import { clamp } from './utils';
+import { clamp } from "./utils";
 
-import { Options } from './options';
+import { Options } from "./options";
 
-import {
-  setStyle,
-  clearEventsOn,
-} from './utils/';
+import { setStyle, clearEventsOn } from "./utils/";
 
-import {
-  debounce,
-} from './decorators/';
+import { debounce } from "./decorators/";
 
-import {
-  TrackController,
-} from './track/';
+import { TrackController } from "./track/";
 
-import {
-  getSize,
-  update,
-  isVisible,
-} from './geometry/';
+import { getSize, update, isVisible } from "./geometry/";
 
-import {
-  scrollTo,
-  setPosition,
-  scrollIntoView,
-} from './scrolling/';
+import { scrollTo, setPosition, scrollIntoView } from "./scrolling/";
 
-import {
-  initPlugins,
-} from './plugin';
+import { initPlugins } from "./plugin";
 
-import * as eventHandlers from './events/';
+import * as eventHandlers from "./events/";
 
-import * as I from './interfaces/';
+import * as I from "./interfaces/";
 
 // DO NOT use WeakMap here
 // .getAll() methods requires `scrollbarMap.values()`
@@ -135,27 +118,24 @@ export class Scrollbar implements I.Scrollbar {
   private _momentum = { x: 0, y: 0 };
   private _listeners = new Set<I.ScrollListener>();
 
-  constructor(
-    containerEl: HTMLElement,
-    options?: Partial<I.ScrollbarOptions>,
-  ) {
+  constructor(containerEl: HTMLElement, options?: Partial<I.ScrollbarOptions>) {
     this.containerEl = containerEl;
-    const contentEl = this.contentEl = document.createElement('div');
+    const contentEl = (this.contentEl = document.createElement("div"));
 
     this.options = new Options(options);
 
     // mark as a scroll element
-    containerEl.setAttribute('data-scrollbar', 'true');
+    containerEl.setAttribute("data-scrollbar", "true");
 
     // make container focusable
-    containerEl.setAttribute('tabindex', '-1');
+    containerEl.setAttribute("tabindex", "-1");
     setStyle(containerEl, {
-      overflow: 'hidden',
-      outline: 'none',
+      overflow: "hidden",
+      outline: "none",
     });
 
     // mount content
-    contentEl.className = 'scroll-content';
+    contentEl.className = "scroll-content";
 
     Array.from(containerEl.childNodes).forEach((node) => {
       contentEl.appendChild(node);
@@ -183,7 +163,7 @@ export class Scrollbar implements I.Scrollbar {
     const ResizeObserver = (window as any).ResizeObserver;
 
     // observe
-    if (typeof ResizeObserver === 'function') {
+    if (typeof ResizeObserver === "function") {
       this._observer = new ResizeObserver(() => {
         this.update();
       });
@@ -274,8 +254,10 @@ export class Scrollbar implements I.Scrollbar {
    * Adds scrolling listener
    */
   addListener(fn: I.ScrollListener) {
-    if (typeof fn !== 'function') {
-      throw new TypeError('[smooth-scrollbar] scrolling listener should be a function');
+    if (typeof fn !== "function") {
+      throw new TypeError(
+        "[smooth-scrollbar-deluxe] scrolling listener should be a function",
+      );
     }
 
     this._listeners.add(fn);
@@ -299,11 +281,17 @@ export class Scrollbar implements I.Scrollbar {
   ) {
     this._updateDebounced();
 
-    const finalDelta = this._plugins.reduce((delta, plugin) => {
-      return plugin.transformDelta(delta, fromEvent) || delta;
-    }, { x, y });
+    const finalDelta = this._plugins.reduce(
+      (delta, plugin) => {
+        return plugin.transformDelta(delta, fromEvent) || delta;
+      },
+      { x, y },
+    );
 
-    const willScroll = !this._shouldPropagateMomentum(finalDelta.x, finalDelta.y);
+    const willScroll = !this._shouldPropagateMomentum(
+      finalDelta.x,
+      finalDelta.y,
+    );
 
     if (willScroll) {
       this.addMomentum(finalDelta.x, finalDelta.y);
@@ -318,10 +306,7 @@ export class Scrollbar implements I.Scrollbar {
    * Increases scrollbar's momentum
    */
   addMomentum(x: number, y: number) {
-    this.setMomentum(
-      this._momentum.x + x,
-      this._momentum.y + y,
-    );
+    this.setMomentum(this._momentum.x + x, this._momentum.y + y);
   }
 
   /**
@@ -359,10 +344,7 @@ export class Scrollbar implements I.Scrollbar {
   }
 
   destroy() {
-    const {
-      containerEl,
-      contentEl,
-    } = this;
+    const { containerEl, contentEl } = this;
 
     clearEventsOn(this);
     this._listeners.clear();
@@ -389,7 +371,7 @@ export class Scrollbar implements I.Scrollbar {
 
     // reset scroll position
     setStyle(containerEl, {
-      overflow: '',
+      overflow: "",
     });
     containerEl.scrollTop = this.scrollTop;
     containerEl.scrollLeft = this.scrollLeft;
@@ -427,11 +409,7 @@ export class Scrollbar implements I.Scrollbar {
   //         1. continuous scrolling is enabled (automatically disabled when overscroll is enabled)
   //         2. scrollbar reaches one side and is not about to scroll on the other direction
   private _shouldPropagateMomentum(deltaX = 0, deltaY = 0): boolean {
-    const {
-      options,
-      offset,
-      limit,
-    } = this;
+    const { options, offset, limit } = this;
 
     if (!options.continuousScrolling) return false;
 
@@ -446,23 +424,26 @@ export class Scrollbar implements I.Scrollbar {
 
     // offsets are not about to change
     // `&=` operator is not allowed for boolean types
-    res = res && (destX === offset.x);
-    res = res && (destY === offset.y);
+    res = res && destX === offset.x;
+    res = res && destY === offset.y;
 
     // current offsets are on the edge
-    res = res && (offset.x === limit.x || offset.x === 0 || offset.y === limit.y || offset.y === 0);
+    res =
+      res &&
+      (offset.x === limit.x ||
+        offset.x === 0 ||
+        offset.y === limit.y ||
+        offset.y === 0);
 
     return res;
   }
 
   private _render() {
-    const {
-      _momentum,
-    } = this;
+    const { _momentum } = this;
 
     if (_momentum.x || _momentum.y) {
-      const nextX = this._nextTick('x');
-      const nextY = this._nextTick('y');
+      const nextX = this._nextTick("x");
+      const nextY = this._nextTick("y");
 
       _momentum.x = nextX.momentum;
       _momentum.y = nextY.momentum;
@@ -479,12 +460,11 @@ export class Scrollbar implements I.Scrollbar {
     this._renderID = requestAnimationFrame(this._render.bind(this));
   }
 
-  private _nextTick(direction: 'x' | 'y'): { momentum: number, position: number } {
-    const {
-      options,
-      offset,
-      _momentum,
-    } = this;
+  private _nextTick(direction: "x" | "y"): {
+    momentum: number;
+    position: number;
+  } {
+    const { options, offset, _momentum } = this;
 
     const current = offset[direction];
     const remain = _momentum[direction];

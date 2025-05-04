@@ -16,4 +16,4 @@ Back in the days that this plugin was created, [the native scrolling was quite s
 
 ## Incompatible with Pointer Event API
 
-This plugin is calling `event.preventDefault()` on `touchmove` events to prevent the native scrolling. However, this breaks pointer event streams and gives some [unexpected consequences](https://github.com/idiotWu/smooth-scrollbar/issues/111#issuecomment-339243256).
+This plugin is calling `event.preventDefault()` on `touchmove` events to prevent the native scrolling. However, this breaks pointer event streams and gives some [unexpected consequences](https://github.com/idiotWu/smooth-scrollbar-deluxe/issues/111#issuecomment-339243256).

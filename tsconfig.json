@@ -17,8 +17,8 @@
     "declaration": true,
     "sourceMap": true,
     "paths": {
-      "smooth-scrollbar": ["src/index"],
-      "smooth-scrollbar/*": ["src/*"]
+      "smooth-scrollbar-deluxe": ["src/index"],
+      "smooth-scrollbar-deluxe/*": ["src/*"]
     }
   },
   "exclude": ["node_modules", "build", "dist"]

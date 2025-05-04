@@ -1,28 +1,26 @@
-import { clamp } from '../../utils';
-import Scrollbar from 'smooth-scrollbar';
+import { clamp } from "../../utils";
+import Scrollbar from "smooth-scrollbar-deluxe";
 
-import { setStyle } from '../../utils/set-style';
+import { setStyle } from "../../utils/set-style";
 
 const GLOW_MAX_OPACITY = 0.75;
 const GLOW_MAX_OFFSET = 0.25;
 
 export class Glow {
-  private _canvas = document.createElement('canvas');
-  private _ctx = this._canvas.getContext('2d') as CanvasRenderingContext2D;
+  private _canvas = document.createElement("canvas");
+  private _ctx = this._canvas.getContext("2d") as CanvasRenderingContext2D;
 
   private _touchX: number;
   private _touchY: number;
 
-  constructor(
-    private _scrollbar: Scrollbar,
-  ) {
+  constructor(private _scrollbar: Scrollbar) {
     setStyle(this._canvas, {
-      position: 'absolute',
+      position: "absolute",
       top: 0,
       left: 0,
-      width: '100%',
-      height: '100%',
-      display: 'none',
+      width: "100%",
+      height: "100%",
+      display: "none",
     });
   }
 
@@ -37,16 +35,17 @@ export class Glow {
   }
 
   adjust() {
-    const {
-      size,
-    } = this._scrollbar;
+    const { size } = this._scrollbar;
 
     const DPR = window.devicePixelRatio || 1;
 
     const nextWidth = size.container.width * DPR;
     const nextHeight = size.container.height * DPR;
 
-    if (nextWidth === this._canvas.width && nextHeight === this._canvas.height) {
+    if (
+      nextWidth === this._canvas.width &&
+      nextHeight === this._canvas.height
+    ) {
       return;
     }
 
@@ -66,19 +65,17 @@ export class Glow {
   render({ x = 0, y = 0 }, color: string) {
     if (!x && !y) {
       setStyle(this._canvas, {
-        display: 'none',
+        display: "none",
       });
 
       return;
     }
 
     setStyle(this._canvas, {
-      display: 'block',
+      display: "block",
     });
 
-    const {
-      size,
-    } = this._scrollbar;
+    const { size } = this._scrollbar;
 
     this._ctx.clearRect(0, 0, size.container.width, size.container.height);
     this._ctx.fillStyle = color;
@@ -94,9 +91,7 @@ export class Glow {
   }
 
   private _renderX(strength: number) {
-    const {
-      size,
-    } = this._scrollbar;
+    const { size } = this._scrollbar;
 
     const maxOverscroll = this._getMaxOverscroll();
     const { width, height } = size.container;
@@ -110,12 +105,16 @@ export class Glow {
       ctx.transform(-1, 0, 0, 1, width, 0);
     }
 
-    const opacity = clamp(Math.abs(strength) / maxOverscroll, 0, GLOW_MAX_OPACITY);
+    const opacity = clamp(
+      Math.abs(strength) / maxOverscroll,
+      0,
+      GLOW_MAX_OPACITY,
+    );
     const startOffset = clamp(opacity, 0, GLOW_MAX_OFFSET) * width;
 
     // controll point
     const x = Math.abs(strength);
-    const y = this._touchY || (height / 2);
+    const y = this._touchY || height / 2;
 
     ctx.globalAlpha = opacity;
     ctx.beginPath();
@@ -127,9 +126,7 @@ export class Glow {
   }
 
   private _renderY(strength: number) {
-    const {
-      size,
-    } = this._scrollbar;
+    const { size } = this._scrollbar;
 
     const maxOverscroll = this._getMaxOverscroll();
     const { width, height } = size.container;
@@ -143,11 +140,15 @@ export class Glow {
       ctx.transform(1, 0, 0, -1, 0, height);
     }
 
-    const opacity = clamp(Math.abs(strength) / maxOverscroll, 0, GLOW_MAX_OPACITY);
+    const opacity = clamp(
+      Math.abs(strength) / maxOverscroll,
+      0,
+      GLOW_MAX_OPACITY,
+    );
     const startOffset = clamp(opacity, 0, GLOW_MAX_OFFSET) * width;
 
     // controll point
-    const x = this._touchX || (width / 2);
+    const x = this._touchX || width / 2;
     const y = Math.abs(strength);
 
     ctx.globalAlpha = opacity;

@@ -2,7 +2,7 @@
   "name": "smooth-scrollbar-deluxe",
   "version": "11.0.0",
   "description": "Customize scrollbar in modern browsers with smooth scrolling experience.",
-  "main": "dist/smooth-scrollbar.js",
+  "main": "dist/smooth-scrollbar-deluxe.js",
   "jsnext:main": "index.js",
   "module": "index.js",
   "types": "index.d.ts",
@@ -31,7 +31,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/idiotWu/smooth-scrollbar.git"
+    "url": "git+https://github.com/idiotWu/smooth-scrollbar-deluxe.git"
   },
   "keywords": [
     "scrollbar",
@@ -42,9 +42,9 @@
   "author": "Dolphin Wood <dolphin.w.e@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/idiotWu/smooth-scrollbar/issues"
+    "url": "https://github.com/idiotWu/smooth-scrollbar-deluxe/issues"
   },
-  "homepage": "https://github.com/idiotWu/smooth-scrollbar#readme",
+  "homepage": "https://github.com/idiotWu/smooth-scrollbar-deluxe#readme",
   "devDependencies": {
     "@types/dat-gui": "^0.6.3",
     "@types/prismjs": "^1.16.0",

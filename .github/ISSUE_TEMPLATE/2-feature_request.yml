@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for sharing your idea to make smooth-scrollbar better.
+        Thank you for sharing your idea to make smooth-scrollbar-deluxe better.
 
         Please fill out the following form as detailed as possible.
   - type: textarea

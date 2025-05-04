@@ -1,5 +1,5 @@
-const TRACK_BG = 'rgba(222, 222, 222, .75)';
-const THUMB_BG = 'rgba(0, 0, 0, .5)';
+const TRACK_BG = "rgba(222, 222, 222, .75)";
+const THUMB_BG = "rgba(0, 0, 0, .5)";
 
 // sets content's display type to `flow-root` to suppress margin collapsing
 const SCROLLBAR_STYLE = `
@@ -56,15 +56,15 @@ const SCROLLBAR_STYLE = `
 }
 `;
 
-const STYLE_ID = 'smooth-scrollbar-style';
+const STYLE_ID = "smooth-scrollbar-deluxe-style";
 let isStyleAttached = false;
 
 export function attachStyle() {
-  if (isStyleAttached || typeof window === 'undefined') {
+  if (isStyleAttached || typeof window === "undefined") {
     return;
   }
 
-  const styleEl = document.createElement('style');
+  const styleEl = document.createElement("style");
   styleEl.id = STYLE_ID;
   styleEl.textContent = SCROLLBAR_STYLE;
 
@@ -76,7 +76,7 @@ export function attachStyle() {
 }
 
 export function detachStyle() {
-  if (!isStyleAttached || typeof window === 'undefined') {
+  if (!isStyleAttached || typeof window === "undefined") {
     return;
   }
 

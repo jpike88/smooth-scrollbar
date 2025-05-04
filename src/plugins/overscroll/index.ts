@@ -1,39 +1,42 @@
-import { clamp, debounce } from '../../utils';
-import { ScrollbarPlugin } from 'smooth-scrollbar';
-import { Bounce } from './bounce';
-import { Glow } from './glow';
+import { clamp, debounce } from "../../utils";
+import { ScrollbarPlugin } from "smooth-scrollbar-deluxe";
+import { Bounce } from "./bounce";
+import { Glow } from "./glow";
 
 export enum OverscrollEffect {
-  BOUNCE = 'bounce',
-  GLOW = 'glow',
+  BOUNCE = "bounce",
+  GLOW = "glow",
 }
 
 export type Data2d = {
-  x: number,
-  y: number,
+  x: number;
+  y: number;
 };
 
-export type OnScrollCallback = (this: OverscrollPlugin, position: Data2d) => void;
+export type OnScrollCallback = (
+  this: OverscrollPlugin,
+  position: Data2d,
+) => void;
 
 export type OverscrollOptions = {
-  effect?: OverscrollEffect,
-  onScroll?: OnScrollCallback,
-  damping: number,
-  maxOverscroll: number,
-  glowColor: string,
+  effect?: OverscrollEffect;
+  onScroll?: OnScrollCallback;
+  damping: number;
+  maxOverscroll: number;
+  glowColor: string;
 };
 
 const ALLOWED_EVENTS = /wheel|touch/;
 
 export default class OverscrollPlugin extends ScrollbarPlugin {
-  static pluginName = 'overscroll';
+  static pluginName = "overscroll";
 
   static defaultOptions: OverscrollOptions = {
     effect: OverscrollEffect.BOUNCE,
     onScroll: undefined,
     damping: 0.2,
     maxOverscroll: 150,
-    glowColor: '#87ceeb',
+    glowColor: "#87ceeb",
   };
 
   options: OverscrollOptions;
@@ -80,16 +83,12 @@ export default class OverscrollPlugin extends ScrollbarPlugin {
   }, 30);
 
   onInit() {
-    const {
-      _glow,
-      options,
-      scrollbar,
-    } = this;
+    const { _glow, options, scrollbar } = this;
 
     // observe
     let effect = options.effect;
 
-    Object.defineProperty(options, 'effect', {
+    Object.defineProperty(options, "effect", {
       get() {
         return effect;
       },
@@ -138,20 +137,16 @@ export default class OverscrollPlugin extends ScrollbarPlugin {
     let { x: nextX, y: nextY } = remainMomentum;
 
     // transfer remain momentum to overscroll
-    if (!this._amplitude.x &&
-        this._willOverscroll('x', remainMomentum.x)
-    ) {
+    if (!this._amplitude.x && this._willOverscroll("x", remainMomentum.x)) {
       nextX = 0;
 
-      this._absorbMomentum('x', remainMomentum.x);
+      this._absorbMomentum("x", remainMomentum.x);
     }
 
-    if (!this._amplitude.y &&
-        this._willOverscroll('y', remainMomentum.y)
-    ) {
+    if (!this._amplitude.y && this._willOverscroll("y", remainMomentum.y)) {
       nextY = 0;
 
-      this._absorbMomentum('y', remainMomentum.y);
+      this._absorbMomentum("y", remainMomentum.y);
     }
 
     this.scrollbar.setMomentum(nextX, nextY);
@@ -168,36 +163,36 @@ export default class OverscrollPlugin extends ScrollbarPlugin {
     if (this._isWheelLocked && /wheel/.test(fromEvent.type)) {
       this._releaseWheel();
 
-      if (this._willOverscroll('x', delta.x)) {
+      if (this._willOverscroll("x", delta.x)) {
         delta.x = 0;
       }
 
-      if (this._willOverscroll('y', delta.y)) {
+      if (this._willOverscroll("y", delta.y)) {
         delta.y = 0;
       }
     }
 
     let { x: nextX, y: nextY } = delta;
 
-    if (this._willOverscroll('x', delta.x)) {
+    if (this._willOverscroll("x", delta.x)) {
       nextX = 0;
-      this._addAmplitude('x', delta.x);
+      this._addAmplitude("x", delta.x);
     }
 
-    if (this._willOverscroll('y', delta.y)) {
+    if (this._willOverscroll("y", delta.y)) {
       nextY = 0;
-      this._addAmplitude('y', delta.y);
+      this._addAmplitude("y", delta.y);
     }
 
     switch (fromEvent.type) {
-      case 'touchstart':
-      case 'touchmove':
+      case "touchstart":
+      case "touchmove":
         this._touching = true;
         this._glow.recordTouch(fromEvent as TouchEvent);
         break;
 
-      case 'touchcancel':
-      case 'touchend':
+      case "touchcancel":
+      case "touchend":
         this._touching = false;
         break;
     }
@@ -208,7 +203,7 @@ export default class OverscrollPlugin extends ScrollbarPlugin {
     };
   }
 
-  private _willOverscroll(direction: 'x' | 'y', delta: number): boolean {
+  private _willOverscroll(direction: "x" | "y", delta: number): boolean {
     if (!delta) {
       return false;
     }
@@ -228,31 +223,28 @@ export default class OverscrollPlugin extends ScrollbarPlugin {
     // cond:
     //  1. next scrolling position is supposed to stay unchange
     //  2. current position is on the edge
-    return clamp(offset + delta, 0, limit) === offset &&
-        (offset === 0 || offset === limit);
+    return (
+      clamp(offset + delta, 0, limit) === offset &&
+      (offset === 0 || offset === limit)
+    );
   }
 
-  private _absorbMomentum(direction: 'x' | 'y', remainMomentum: number) {
-    const {
-      options,
-      _lastEventType,
-      _amplitude,
-    } = this;
+  private _absorbMomentum(direction: "x" | "y", remainMomentum: number) {
+    const { options, _lastEventType, _amplitude } = this;
 
     if (!ALLOWED_EVENTS.test(_lastEventType)) {
       return;
     }
 
-    _amplitude[direction] = clamp(remainMomentum, -options.maxOverscroll, options.maxOverscroll);
+    _amplitude[direction] = clamp(
+      remainMomentum,
+      -options.maxOverscroll,
+      options.maxOverscroll,
+    );
   }
 
-  private _addAmplitude(direction: 'x' | 'y', delta: number) {
-    const {
-      options,
-      scrollbar,
-      _amplitude,
-      _position,
-    } = this;
+  private _addAmplitude(direction: "x" | "y", delta: number) {
+    const { options, scrollbar, _amplitude, _position } = this;
 
     const currentAmp = _amplitude[direction];
 
@@ -264,15 +256,17 @@ export default class OverscrollPlugin extends ScrollbarPlugin {
       // opposite direction
       friction = 0;
     } else {
-      friction = this._wheelScrollBack[direction] ?
-        1 : Math.abs(currentAmp / options.maxOverscroll);
+      friction = this._wheelScrollBack[direction]
+        ? 1
+        : Math.abs(currentAmp / options.maxOverscroll);
     }
 
     const amp = currentAmp + delta * (1 - friction);
 
-    _amplitude[direction] = scrollbar.offset[direction] === 0 ?
-      /*    top | left  */ clamp(amp, -options.maxOverscroll, 0) :
-      /* bottom | right */ clamp(amp, 0, options.maxOverscroll);
+    _amplitude[direction] =
+      scrollbar.offset[direction] === 0
+        ? /*    top | left  */ clamp(amp, -options.maxOverscroll, 0)
+        : /* bottom | right */ clamp(amp, 0, options.maxOverscroll);
 
     if (isOpposite) {
       // scroll back
@@ -281,17 +275,14 @@ export default class OverscrollPlugin extends ScrollbarPlugin {
   }
 
   private _render() {
-    const {
-      options,
-      _amplitude,
-      _position,
-    } = this;
+    const { options, _amplitude, _position } = this;
 
-    if (this._enabled &&
-        (_amplitude.x || _amplitude.y || _position.x || _position.y)
+    if (
+      this._enabled &&
+      (_amplitude.x || _amplitude.y || _position.x || _position.y)
     ) {
-      const nextX = this._nextAmp('x');
-      const nextY = this._nextAmp('y');
+      const nextX = this._nextAmp("x");
+      const nextY = this._nextAmp("y");
 
       _amplitude.x = nextX.amplitude;
       _position.x = nextX.position;
@@ -309,26 +300,25 @@ export default class OverscrollPlugin extends ScrollbarPlugin {
           break;
       }
 
-      if (typeof options.onScroll === 'function') {
+      if (typeof options.onScroll === "function") {
         options.onScroll.call(this, { ..._position });
       }
     }
   }
 
-  private _nextAmp(direction: 'x' | 'y'): { amplitude: number, position: number } {
-    const {
-      options,
-      _amplitude,
-      _position,
-    } = this;
+  private _nextAmp(direction: "x" | "y"): {
+    amplitude: number;
+    position: number;
+  } {
+    const { options, _amplitude, _position } = this;
 
     const t = 1 - options.damping;
     const amp = _amplitude[direction];
     const pos = _position[direction];
 
-    const nextAmp = this._touching ? amp : (amp * t | 0);
+    const nextAmp = this._touching ? amp : (amp * t) | 0;
     const distance = nextAmp - pos;
-    const nextPos = pos + distance - (distance * t | 0);
+    const nextPos = pos + distance - ((distance * t) | 0);
 
     if (!this._touching && Math.abs(nextPos) < Math.abs(pos)) {
       this._wheelScrollBack[direction] = true;

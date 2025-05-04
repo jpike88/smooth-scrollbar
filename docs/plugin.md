@@ -1,6 +1,6 @@
 # Plugin System
 
-> This is the API documentation for `smooth-scrollbar@8.x`, check [here](https://github.com/idiotWu/smooth-scrollbar/tree/7.x) for the docs of version 7.x.
+> This is the API documentation for `smooth-scrollbar-deluxe@8.x`, check [here](https://github.com/idiotWu/smooth-scrollbar-deluxe/tree/7.x) for the docs of version 7.x.
 
 > Looking for migration guides? See [migration guide](migration.md) for details.
 
@@ -65,7 +65,7 @@ abstract class ScrollbarPlugin {
 `ScrollbarPlugin` is an abstract class so you can't use it directly with `Scrollbar`. Normally you would subclass it with at least a `pluginName` property:
 
 ```js
-import { ScrollbarPlugin } from 'smooth-scrollbar';
+import { ScrollbarPlugin } from 'smooth-scrollbar-deluxe';
 
 class MyPlugin extends ScrollbarPlugin {
   static pluginName = 'myPlugin';
@@ -190,7 +190,7 @@ class MeowPlugin extends ScrollbarPlugin {
 When someone wants to use the `MeowPlugin`, he or she needs:
 
 ```ts
-import Scrollbar from 'smooth-scrollbar';
+import Scrollbar from 'smooth-scrollbar-deluxe';
 import MeowPlugin from 'meow-plugin';
 
 Scrollbar.use(MeowPlugin);
@@ -322,7 +322,7 @@ Scrollbar.use(PluginA, PluginB, PluginC, ..., OverscrollPlugin);
 This plugin allows you to invert delta for particular events.
 
 ```ts
-import Scrollbar, { ScrollbarPlugin } from 'smooth-scrollbar';
+import Scrollbar, { ScrollbarPlugin } from 'smooth-scrollbar-deluxe';
 
 class InvertDeltaPlugin extends ScrollbarPlugin {
   static pluginName = 'invertDelta';
